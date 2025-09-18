@@ -13,20 +13,26 @@ import { FormsModule } from '@angular/forms';
     <button (click)="saveTask()">Save</button>
   </div>
   <hr>
-  <div>
-    <label>Update Work</label>
-    <input [(ngModel)]="editTask" />
-    <button (click)="updateTask()">Update</button>
-  </div>
+  @if(showEditTaskForm)
+  {
+    <div>
+      <label>Update Work</label>
+      <input [(ngModel)]="editTask" />
+      <button (click)="updateTask()">Update</button>
+    </div>
+  }
   <div>
     <ul>
       @for(task of taskList; track task)
       {
         <li>
           {{ 'Index: ' + $index + ' Task: ' + task }}
+          
+        @if(!showEditTaskForm)
+        {
           <button (click)="getTask($index)">Edit</button>
-          <button (click)="deleteTask($index)">Delete</button>
-
+          <button (click)="deleteTask($index)">Delete</button> 
+        }
         </li>
       }
     </ul>
@@ -43,6 +49,8 @@ export class App {
   editTask: string = "";
   editTaskId: number = 0;
 
+  showEditTaskForm: boolean = false;
+
   // methods
   saveTask () {
     // add the task to the taskList
@@ -58,9 +66,11 @@ export class App {
   getTask (index: number) {
     this.editTask = this.taskList[index];
     this.editTaskId = index;
+    this.showEditTaskForm = true;
   }
 
   updateTask () {
     this.taskList[this.editTaskId] = this.editTask;
+    this.showEditTaskForm = false;
   }
 }
